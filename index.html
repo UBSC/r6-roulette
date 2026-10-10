@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><text x='50%' y='68%' font-size='60' font-weight='900' fill='white' font-family='sans-serif' text-anchor='middle'>6</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RAINBOW SIX SIEGE // OPERATION DAYBREAK // CRAZY STRAT ROULETTE</title>
+    <!-- Google Fonts for authentic Siege typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Background Canvas (Dust motes & light beams) -->
+      <canvas id="bg-canvas"></canvas>
+
+      <!-- Atmospheric Hangar Backdrop Image -->
+      <div class="hangar-bg-layer" id="hangar-bg"></div>
+      <div class="hangar-vignette"></div>
+
+      <!-- TOP NAVIGATION BAR (Pixel-perfect Siege Menu) -->
+      <header class="top-navbar">
+        <div class="nav-left-cluster">
+          <button class="bumper-hint" title="Previous tab">LB</button>
+          <nav class="nav-tabs-list">
+            <button class="nav-tab-btn active" data-tab="play">
+              <span>PLAY</span>
+              <div class="active-indicator-bar"></div>
+            </button>
+            <button class="nav-tab-btn" data-tab="operators">
+              <span>OPERATORS</span>
+              <div class="active-indicator-bar"></div>
+            </button>
+            <button class="nav-tab-btn" data-tab="strats">
+              <span>CRAZY STRATS</span>
+              <div class="active-indicator-bar"></div>
+            </button>
+            <button class="nav-tab-btn" data-tab="alphapack">
+              <span>ALPHA PACK</span>
+              <div class="active-indicator-bar"></div>
+            </button>
+            <button class="nav-tab-btn" data-tab="squad">
+              <span>SQUAD (5)</span>
+              <div class="active-indicator-bar"></div>
+            </button>
+            <button class="nav-tab-btn esports-tab" data-tab="history">
+              <span>HISTORY</span>
+              <span class="red-notification-dot"></span>
+              <div class="active-indicator-bar"></div>
+            </button>
+            <button class="nav-tab-btn" data-tab="shop">
+              <span>SHOP</span>
+              <div class="active-indicator-bar"></div>
+            </button>
+            <button class="nav-tab-btn freak-nav-tab" data-tab="freakzone">
+              <span class="freak-nav-label">🔥 ФРИК-ЗОНА</span>
+              <span class="freak-nav-badge">18+</span>
+              <div class="active-indicator-bar"></div>
+            </button>
+            <button class="nav-tab-btn bp-nav-tab" data-tab="battlepass">
+              <span class="bp-nav-label">⭐ БАТТЛПАСС</span>
+              <span class="bp-nav-tier-badge">LVL 7</span>
+              <div class="active-indicator-bar"></div>
+            </button>
+          </nav>
+          <button class="bumper-hint" title="Next tab">RB</button>
+        </div>
+
+        <div class="nav-right-cluster">
+          <!-- Voice Announcer Toggle -->
+          <button class="top-icon-btn voice-toggle-btn" id="btn-toggle-voice" title="Голосовой тактический анонсер">
+            <span class="btn-hotkey">V</span>
+            <span class="icon-label">🔊 ГОЛОС</span>
+          </button>
+
+          <!-- Sound Mute/Unmute -->
+          <button class="top-icon-btn audio-toggle-btn" id="btn-toggle-audio" title="Звуки UI и эффекты">
+            <span class="icon-label">SFX: ON</span>
+          </button>
+
+          <!-- Squad slot indicator -->
+          <div class="squad-counter-badge" id="btn-top-squad" title="Открыть Squad Panel">
+            <span class="btn-hotkey">Q</span>
+            <span class="squad-icon">👥</span>
+            <span class="squad-val">1/5</span>
+          </div>
+
+          <!-- User Profile Box -->
+          <div class="user-profile-badge">
+            <div class="avatar-box">
+              <span class="avatar-icon">👤</span>
+            </div>
+            <div class="level-wreath-badge" title="Clearance Level">
+              <span class="wreath-leaf">‹</span>
+              <span class="level-num" id="user-level">1</span>
+              <span class="wreath-leaf">›</span>
+            </div>
+          </div>
+
+          <!-- Currencies -->
+          <div class="currency-group">
+            <div class="currency-item r6-credits" title="R6 Credits">
+              <span class="curr-icon">🟡</span>
+              <span class="curr-val" id="r6-credits-val">540</span>
+            </div>
+            <div class="currency-item renown" title="Renown (Слава)">
+              <span class="curr-icon">🔷</span>
+              <span class="curr-val" id="renown-val">25,480</span>
+            </div>
+          </div>
+
+          <!-- Settings Gear -->
+          <button class="top-icon-btn settings-gear" id="btn-settings" title="Настройки">
+            <span>⚙️</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- SUB-NAVIGATION / PLAYLIST MODES BAR -->
+      <div class="sub-navbar">
+        <button class="bumper-pill-btn" id="btn-lt-mode">LT</button>
+        <div class="mode-pills-list">
+          <button class="mode-pill active" data-mode="core">
+            <span class="six-logo-mini">6</span>
+            <span>CORE SIEGE</span>
+          </button>
+          <button class="mode-pill" data-mode="attack">
+            <span class="six-logo-mini">6</span>
+            <span>АТАКА ONLY</span>
+          </button>
+          <button class="mode-pill" data-mode="defense">
+            <span class="six-logo-mini">6</span>
+            <span>ЗАЩИТА ONLY</span>
+          </button>
+          <button class="mode-pill" data-mode="extreme">
+            <span class="six-logo-mini">6</span>
+            <span>ПОЛНЫЙ ПИЗДЕЦ 🔥</span>
+          </button>
+        </div>
+        <button class="bumper-pill-btn" id="btn-rt-mode">RT</button>
+      </div>
+
+      <!-- MAIN CONTAINER: THREE-COLUMN SIEGE DASHBOARD -->
+      <main class="main-dashboard-grid">
+        
+        <!-- LEFT COLUMN: SEASON BRANDING & ACTION LAUNCHER -->
+        <aside class="left-hero-column">
+          <!-- Season Title Header -->
+          <div class="season-brand-block">
+            <div class="six-shield-logo">
+              <div class="six-badge-inner">6</div>
+            </div>
+            <div class="season-titles">
+              <div class="season-year-text">YEAR 10 SEASON 2</div>
+              <h1 class="season-operation-title">OPERATION DAYBREAK</h1>
+              <div class="rank-status-row">
+                <span class="rank-icon-unranked">🛡️</span>
+                <span class="rank-status-text">NOT RANKED</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Filters: Side & Madness tier -->
+          <div class="tactical-filter-box">
+            <div class="filter-row-label">РЕЖИМ БЕЗУМИЯ (MADNESS TIER):</div>
+            <div class="madness-toggles">
+              <button class="madness-btn active" data-madness="all">ВСЕ</button>
+              <button class="madness-btn" data-madness="extreme">🔴 ПИЗДЕЦ</button>
+              <button class="madness-btn" data-madness="hard">🟠 ЖЁСТКО</button>
+              <button class="madness-btn" data-madness="soft">🟡 МЯГКО</button>
+            </div>
+          </div>
+
+          <!-- Bottom-Left Action Card (Matches reference screenshot) -->
+          <div class="bottom-left-launcher">
+            <!-- Open Squad Panel Button -->
+            <button class="squad-panel-trigger-btn" id="btn-open-squad-panel">
+              <span class="controller-btn-badge">🎮</span>
+              <span class="icon-squad">👥</span>
+              <span>Open Squad Panel [F2]</span>
+            </button>
+
+            <!-- Main Red-lit Launch Card -->
+            <div class="playlist-card-outer" id="btn-main-spin">
+              <div class="playlist-card-preview">
+                <div class="hotkey-corner-badge">
+                  <span class="badge-ctrl">A</span>
+                  <span class="badge-kb">[ПРОБЕЛ]</span>
+                </div>
+                <div class="red-smoke-gradient"></div>
+                <div class="playlist-card-captions">
+                  <div class="caption-continue">CONTINUE</div>
+                  <div class="caption-title" id="spin-main-caption">BASICS // КРУТИТЬ РУЛЕТКУ</div>
+                </div>
+              </div>
+              <div class="playlist-card-tab-bar">
+                <span class="tab-label">PLAYLISTS // СТАРТ</span>
+                <span class="live-dot-pulse"></span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- CENTER STAGE: DYNAMIC OPERATOR SHOWCASE & RESULT BRIEFING -->
+        <section class="center-stage-column">
+          <!-- Operator Visual Stage -->
+          <div class="operator-stage-wrapper">
+            <!-- Holographic Scan Overlay -->
+            <div class="holo-target-brackets" id="holo-brackets">
+              <div class="bracket top-left"></div>
+              <div class="bracket top-right"></div>
+              <div class="bracket bottom-left"></div>
+              <div class="bracket bottom-right"></div>
+              <div class="target-crosshair"></div>
+            </div>
+
+            <!-- Central Operator Artwork / Render -->
+            <div class="operator-render-container" id="operator-render-container">
+              <!-- Default hero render matches the Daybreak screenshot -->
+              <div class="operator-hero-visual" id="operator-hero-visual">
+                <div class="operator-badge-watermark" id="op-watermark">6</div>
+                <div class="operator-dynamic-icon" id="op-dynamic-icon">⚡🛡️</div>
+                <div class="operator-callout-overlay">
+                  <div class="callout-name" id="stage-op-name">CLASH</div>
+                  <div class="callout-role" id="stage-op-role">MPS // DEFENDER // CCE SHIELD</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tactical Briefing Result Slot (Injected here or modal) -->
+            <div id="result-briefing-slot"></div>
+          </div>
+        </section>
+
+        <!-- RIGHT COLUMN: CHALLENGES, LEVEL PROGRESS & NEWS BANNER -->
+        <aside class="right-sidebar-column">
+          
+          <!-- Card 1: REACH CLEARANCE LEVEL 2 / UNLOCK ENLISTED -->
+          <div class="sidebar-card enlist-progress-card">
+            <div class="card-eyebrow">REACH CLEARANCE LEVEL 2</div>
+            <div class="card-main-title">UNLOCK ENLISTED</div>
+            <div class="xp-progress-row">
+              <div class="xp-bar-track">
+                <div class="xp-bar-fill" id="xp-bar-fill" style="width: 25%;"></div>
+              </div>
+              <div class="xp-level-badge">
+                <span id="next-level-badge">2</span>
+              </div>
+            </div>
+            <div class="xp-counter-text" id="xp-counter-text">125 / 500 XP</div>
+          </div>
+
+          <!-- Card 2: NEWCOMER CHALLENGES (Matches screenshot) -->
+          <div class="sidebar-card newcomer-card">
+            <div class="newcomer-header">
+              <div class="newcomer-title">NEWCOMER // DAILY CHAOS</div>
+              <div class="card-pager-indicator">
+                <span class="pager-dash active"></span>
+                <span class="pager-dash"></span>
+                <span class="pager-dash"></span>
+              </div>
+            </div>
+
+            <div class="challenges-track-list">
+              <div class="challenge-track-item">
+                <div class="track-info">
+                  <div class="track-text">Победить раунд с BOSG.12.2 на ACOG</div>
+                  <div class="track-meta">
+                    <span class="track-progress">0/1</span>
+                    <span class="track-reward">+1000 XP</span>
+                  </div>
+                </div>
+                <button class="track-check-btn" title="Отметить выполненным">✓</button>
+              </div>
+
+              <div class="challenge-track-item">
+                <div class="track-info">
+                  <div class="track-text">Выиграть раунд без прицеливания (No ADS)</div>
+                  <div class="track-meta">
+                    <span class="track-progress">0/1</span>
+                    <span class="track-reward">+1000 XP</span>
+                  </div>
+                </div>
+                <button class="track-check-btn" title="Отметить выполненным">✓</button>
+              </div>
+
+              <div class="challenge-track-item">
+                <div class="track-info">
+                  <div class="track-text">Штурм в одну дверь: вся команда гуськом</div>
+                  <div class="track-meta">
+                    <span class="track-progress">0/1</span>
+                    <span class="track-reward">+1000 XP</span>
+                  </div>
+                </div>
+                <button class="track-check-btn" title="Отметить выполненным">✓</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: R6FIX / OPERATION DAYBREAK NEWS BANNER (Matches screenshot) -->
+          <div class="sidebar-card r6fix-news-banner" id="btn-news-card">
+            <div class="r6fix-content">
+              <div class="r6fix-brand">
+                <span class="r6-logo-small">RAINBOW SIX SIEGE</span>
+                <span class="r6fix-bold">R6FIX</span>
+              </div>
+              <div class="r6fix-qr">
+                <div class="qr-mockup">
+                  <div class="qr-pixel"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: UNREAD NOTIFICATIONS & ACCESSIBILITY -->
+          <div class="sidebar-bottom-actions">
+            <button class="hud-pill-action" id="btn-unread-badge">
+              <span class="bell-icon">🔔</span>
+              <span class="unread-count">x9 UNREAD</span>
+            </button>
+            <button class="hud-pill-action" id="btn-accessibility">
+              <span>ACCESSIBILITY</span>
+            </button>
+          </div>
+        </aside>
+
+      </main>
+
+      <!-- MODAL & REEL MOUNT SLOTS -->
+      <div id="reel-mount-point"></div>
+      <div id="modal-mount-point"></div>
+
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
